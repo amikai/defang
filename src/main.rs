@@ -58,14 +58,9 @@ fn main() -> Result<()> {
 
     let mut w = io::stdout().lock();
 
-    let mut r: Box<dyn BufRead> = if let Some(filename) = matches.get_one::<String>("input") {
-        Box::new(BufReader::new(File::open(filename)?))
+    if let Some(filename) = matches.get_one::<String>("input") {
+        convert_in_out(mode, &mut BufReader::new(File::open(filename)?), &mut w)
     } else {
-        Box::new(io::stdin().lock())
-    };
-
-    match convert_in_out(mode, &mut r, &mut w) {
-        Ok(_) => Ok(()),
-        Err(e) => Err(e),
+        convert_in_out(mode, &mut io::stdin().lock(), &mut w)
     }
 }
