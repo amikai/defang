@@ -30,8 +30,6 @@ fn convert_in_out<R: BufRead, W: Write>(mode: Mode, reader: &mut R, writer: &mut
 }
 
 fn main() -> Result<()> {
-    // rewrite to defang [OPTION] FILE, like GNU base64
-    // only -d option
     let matches = Command::new("defang")
         .version("0.1")
         .author("Amikai Chuang")
@@ -52,7 +50,6 @@ fn main() -> Result<()> {
         )
         .get_matches();
 
-    // Access the values of the arguments
     let mode = if matches.get_flag("decode") {
         Mode::Fang
     } else {
