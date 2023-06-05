@@ -53,3 +53,4 @@ hxxp://www[.]google[.]com
 hxxps://www[.]google[.]com
 ```
 
+Note: You can use -d option to fang (reverse operation of defang)
