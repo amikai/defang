@@ -9,7 +9,7 @@ enum Mode {
 }
 
 fn defang(s: &str) -> Result<String> {
-    Ok(s.replace(".", "[.]").replacen("http", "hxxp", 1))
+    Ok(s.replace('.', "[.]").replacen("http", "hxxp", 1))
 }
 
 fn fang(s: &str) -> Result<String> {
@@ -23,7 +23,7 @@ fn convert_in_out<R: BufRead, W: Write>(mode: Mode, reader: &mut R, writer: &mut
             Mode::Defang => defang(&line)?,
             Mode::Fang => fang(&line)?,
         };
-        writeln!(writer, "{}", res)?;
+        writeln!(writer, "{res}")?;
     }
     writer.flush()?;
     Ok(())
