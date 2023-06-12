@@ -9,7 +9,21 @@ enum Mode {
 }
 
 fn defang(s: &str) -> Result<String> {
-    Ok(s.replace('.', "[.]").replacen("http", "hxxp", 1))
+    let mut ret = String::new();
+    let mut count = 0;
+
+    for c in s.replacen("http", "hxxp", 1).chars() {
+        if c == '/' {
+            count += 1;
+        }
+
+        if count < 3 && c == '.' {
+            ret.push_str("[.]");
+        } else {
+            ret.push(c);
+        }
+    }
+    Ok(ret)
 }
 
 fn fang(s: &str) -> Result<String> {
