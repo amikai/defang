@@ -14,7 +14,7 @@ fn defang(s: &str) -> Result<String> {
     // check the url is follow the standard: https://url.spec.whatwg.org/
     let _ = Url::parse(s).context("url is not valid")?;
 
-    let mut ret = String::new();
+    let mut ret = String::with_capacity(s.len());
     let mut count = 0;
 
     for c in s.replacen("http", "hxxp", 1).chars() {
