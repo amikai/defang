@@ -4,5 +4,9 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-anyhow = "1.0.71"
-clap = "4.3.1"
+anyhow = "1.0.89"
+clap = "4.5.20"
+url = "2.5.2"
+
+[dev-dependencies]
+pretty_assertions = "1.4.1"

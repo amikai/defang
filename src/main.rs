@@ -1,7 +1,9 @@
+use anyhow::Context;
 use anyhow::Result;
 use clap::{Arg, ArgAction, Command};
 use std::fs::File;
 use std::io::{self, BufRead, BufReader, Write};
+use url::Url;
 
 enum Mode {
     Defang,
@@ -9,6 +11,9 @@ enum Mode {
 }
 
 fn defang(s: &str) -> Result<String> {
+    // check the url is follow the standard: https://url.spec.whatwg.org/
+    let _ = Url::parse(s).context("url is not valid")?;
+
     let mut ret = String::new();
     let mut count = 0;
 
@@ -76,5 +81,39 @@ fn main() -> Result<()> {
         convert_in_out(mode, &mut BufReader::new(File::open(filename)?), &mut w)
     } else {
         convert_in_out(mode, &mut io::stdin().lock(), &mut w)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use pretty_assertions::assert_eq;
+
+    #[test]
+    fn defang_normal() {
+        let got = defang("http://google.com").unwrap();
+        let want = "hxxp://google[.]com";
+        assert_eq!(want, &got);
+    }
+
+    #[test]
+    fn defang_url_in_url() {
+        let got = defang("http://google.com/?u=http://www.google.com").unwrap();
+        let want = "hxxp://google[.]com/?u=http://www.google.com";
+        assert_eq!(want, &got);
+    }
+
+    #[test]
+    fn fang_normal() {
+        let got = fang("hxxp://google[.]com").unwrap();
+        let want = "http://google.com";
+        assert_eq!(want, &got)
+    }
+
+    #[test]
+    fn fang_url_in_url() {
+        let got = fang("hxxp://google[.]com/?u=http://www.google.com").unwrap();
+        let want = "http://google.com/?u=http://www.google.com";
+        assert_eq!(want, &got);
     }
 }
